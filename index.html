@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Покердом — официальный сайт Pokerdom для онлайн покера</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2ecc71',
+                        primaryHover: '#4dd486',
+                        primaryPressed: '#29b866',
+                        dark: '#000000',
+                        darkSection: '#202020',
+                        mainBg: '#f5f5f5',
+                        toolbarBg: '#000000',
+                        accent2: '#ffae00',
+                        accent3: '#f8333c',
+                        tertiary: '#999999',
+                    },
+                    fontFamily: {
+                        main: ['Inter', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        card: '15px',
+                        button: '100px',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', Helvetica, Arial, sans-serif; background: #fff; color: #000; }
+        .games-scroll::-webkit-scrollbar { display: none; }
+        .games-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .category-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        .game-card:hover .game-overlay { max-height: 220px; }
+        .game-card:hover .game-title { white-space: normal; }
+        .promo-slide { scroll-snap-align: start; }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 3.5s infinite;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-black">
+        <div class="flex items-center justify-between h-[70px] md:h-[90px] px-5 md:px-[30px] max-w-[1160px] mx-auto">
+            <!-- Logo -->
+            <a href="/" class="flex-shrink-0">
+                <img src="https://pixiocdn.net/imagination/v1/doc/0/95/698c58f1dd2823130a4af7ee/" alt="Pokerdom" class="h-8 md:h-10">
+            </a>
+            <!-- Right Side -->
+            <div class="flex items-center gap-3 ml-auto">
+                <!-- Notification Bell -->
+                <button class="relative w-10 h-10 flex items-center justify-center rounded-[10px] hover:bg-white/10 transition">
+                    <svg width="30" height="33" viewBox="0 0 30 33" fill="none">
+                        <path d="M2.90117 20.2166V13.2254C2.90117 9.58729 4.26221 6.28143 6.45439 3.88411C8.64656 1.48779 11.6717 0 14.9999 0C18.3281 0 21.3533 1.48779 23.5455 3.88411C25.7376 6.28042 27.0987 9.58729 27.0987 13.2254V20.2166C27.8389 20.3301 28.5038 20.7095 29.0089 21.2617C29.6197 21.9293 29.998 22.8499 29.998 23.8628C29.998 24.8767 29.6197 25.7973 29.0089 26.4639C28.3991 27.1305 27.557 27.5451 26.6294 27.5451H20.4735C20.2852 28.8331 19.7259 29.9866 18.9187 30.869C17.9148 31.9663 16.529 32.644 14.999 32.644C13.468 32.644 12.0822 31.9653 11.0794 30.869C10.2721 29.9866 9.71281 28.8331 9.52454 27.5451H3.36862C2.44198 27.5451 1.5989 27.1305 0.989102 26.4639C0.379292 25.7973 0 24.8767 0 23.8628C0 22.8499 0.379292 21.9283 0.989102 21.2617C1.49421 20.7095 2.16003 20.3301 2.90117 20.2166ZM18.6826 27.5451H11.3172C11.4816 28.3021 11.8361 28.9787 12.3229 29.5108C13.008 30.2597 13.9548 30.7225 14.9999 30.7225C16.0451 30.7225 16.9919 30.2597 17.677 29.5108C18.1637 28.9787 18.5183 28.3021 18.6826 27.5451ZM25.3409 20.1805V13.2254C25.3409 10.1173 24.1773 7.29236 22.3029 5.24239C20.4285 3.19342 17.8432 1.92047 14.9999 1.92047C12.1566 1.92047 9.57137 3.19242 7.69695 5.24239C5.82254 7.29136 4.65895 10.1173 4.65895 13.2254V20.1805H25.3409ZM26.6294 22.102H26.2198H3.77914H3.36954C2.9278 22.102 2.52463 22.3007 2.23258 22.62C1.93962 22.9402 1.7587 23.3799 1.7587 23.8628C1.7587 24.3457 1.94054 24.7864 2.23258 25.1056C2.52463 25.4259 2.9278 25.6237 3.36954 25.6237H10.3345H19.6635H26.6285C27.0703 25.6237 27.4734 25.4249 27.7654 25.1056C28.0584 24.7864 28.2393 24.3457 28.2393 23.8628C28.2393 23.3799 28.0575 22.9392 27.7654 22.62C27.4734 22.3007 27.0713 22.102 26.6294 22.102Z" fill="#2ECC71"/>
+                    </svg>
+                </button>
+                <!-- Login Button -->
+                <button class="bg-primary hover:bg-primaryHover text-white font-bold text-xs md:text-sm uppercase rounded-button px-4 md:px-7 h-[40px] md:h-[50px] min-w-[80px] md:min-w-[119px] transition">
+                    Войти
+                </button>
+                <!-- Register Button -->
+                <button class="border border-white/30 text-white hover:bg-white/15 font-bold text-xs md:text-sm uppercase rounded-button px-4 md:px-7 h-[40px] md:h-[50px] min-w-[80px] md:min-w-[119px] transition hidden md:block">
+                    Регистрация
+                </button>
+            </div>
+        </div>
+        <!-- Navigation Tabs -->
+        <nav class="bg-white shadow-sm">
+            <div class="flex items-center justify-center h-[34px] md:h-[40px] max-w-[1160px] mx-auto">
+                <div class="flex items-center w-full h-full">
+                    <div class="flex-1 flex items-center justify-center h-full bg-[#ffe6e2]/80 text-black font-bold text-[10px] md:text-base uppercase cursor-pointer relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-[#ff4848] after:shadow-[0_-1px_4px_0px_rgba(255,72,72,0.6)]">
+                        <img src="/assets/pokerdom/images/main-menu/silver/casino.svg" alt="" class="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-1.5 hidden md:block">
+                        Казино
+                    </div>
+                    <div class="flex-1 flex items-center justify-center h-full text-black/80 hover:text-black hover:font-bold text-[10px] md:text-base uppercase cursor-pointer border-r border-[#f5f5f5]">
+                        <img src="/assets/pokerdom/images/main-menu/silver/poker.svg" alt="" class="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-1.5 hidden md:block">
+                        Покер
+                    </div>
+                    <div class="flex-1 flex items-center justify-center h-full text-black/80 hover:text-black hover:font-bold text-[10px] md:text-base uppercase cursor-pointer">
+                        <img src="/assets/pokerdom/images/main-menu/silver/sport.svg" alt="" class="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-1.5 hidden md:block">
+                        Спорт
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="bg-mainBg min-h-screen">
+        <!-- Hero Banner -->
+        <section class="max-w-[1160px] mx-auto mb-5 md:mb-8 px-5 md:px-0 pt-5">
+            <div class="relative rounded-card overflow-hidden h-[145px] md:h-[320px]">
+                <img src="https://pixiocdn.net/imagination/v1/gfs/0/95/65aeb307303da7e51f9351ee/1160/webp" alt="Бонус" class="w-full h-full object-cover">
+                <div class="absolute inset-0 flex items-end md:items-start p-5 md:p-10">
+                    <div class="text-white">
+                        <h2 class="text-sm md:text-3xl font-bold mb-3 md:mb-6 drop-shadow-md leading-tight">
+                            Забери свой стартовый бонус <br>и умножь шансы на выигрыш!
+                        </h2>
+                        <button class="bg-primary hover:bg-primaryHover active:bg-primaryPressed text-white font-bold text-xs md:text-base uppercase rounded-button px-5 md:px-8 h-[30px] md:h-[50px] min-w-[80px] transition">
+                            Вперед
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Navigation -->
+        <section class="mb-5 md:mb-7">
+            <div class="max-w-[1160px] mx-auto px-0 md:px-0">
+                <!-- Search (desktop only) -->
+                <div class="hidden md:flex items-center gap-4 mb-4 px-5 md:px-0">
+                    <button class="flex items-center gap-2 bg-white shadow-sm rounded-button px-4 h-[40px] min-w-[180px] font-semibold text-sm text-black">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        Поиск
+                    </button>
+                </div>
+                <!-- Categories -->
+                <div class="flex items-center gap-2 md:gap-3 overflow-x-auto category-scroll px-5 md:px-5 pb-1">
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/65242b8df84465fc1ef63a1c/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Топ
+                    </button>
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/69d61eb963718cbc2586e22f/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Провайдер недели
+                    </button>
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/65242bb5f84465fc1ef63a58/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Новые
+                    </button>
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/66fe9c7a9d3a65edac72e9f6/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Эксклюзив
+                    </button>
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/67bdb4defd665639be411d99/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Эксклюзив Live
+                    </button>
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/67efd7848e2a10da2d7c54da/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Популярное
+                    </button>
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/697c9e7c45d6f603af9a2a45/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Amusnet
+                    </button>
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/65242bf6f84465fc1ef63a91/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Live дилеры
+                    </button>
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/65242c1df84465fc1ef63ab8/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Слоты
+                    </button>
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/65242c48dd30489a86d77831/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Краш-игры
+                    </button>
+                    <button class="flex items-center gap-1.5 md:gap-2 bg-white shadow-sm rounded-button px-3 md:px-4 h-[30px] md:h-[40px] font-semibold text-[12px] md:text-sm text-black whitespace-nowrap flex-shrink-0">
+                        <img src="https://pixiocdn.net/imagination/v1/doc/0/95/65242c6f9afa505196890a1a/" alt="" class="w-4 h-4 md:w-5 md:h-5"> Столы
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Games Section: Топ -->
+        <section class="max-w-[1160px] mx-auto px-5 md:px-0 mb-6" id="top-games">
+            <div class="flex items-center justify-between mb-4 md:mb-6">
+                <div class="flex items-center gap-2">
+                    <img src="https://pixiocdn.net/imagination/v1/doc/0/95/65242b8df84465fc1ef63a1c/" alt="Топ" class="h-5 md:h-7">
+                    <h3 class="text-sm md:text-xl font-semibold uppercase">Топ</h3>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="#" class="bg-primary text-white text-[12px] md:text-sm font-semibold rounded-button px-3 md:px-6 h-[30px] md:h-[40px] flex items-center shadow-sm hover:bg-primaryHover transition">
+                        ВСЕ
+                    </a>
+                </div>
+            </div>
+            <!-- Games Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3" id="top-games-grid">
+            </div>
+        </section>
+
+        <!-- Promo Banner 1 -->
+        <section class="max-w-[1160px] mx-auto px-5 md:px-0 mb-6">
+            <div class="relative rounded-card overflow-hidden h-[145px] md:h-[208px]">
+                <img src="https://pixiocdn.net/imagination/v1/gfs/0/95/69d4f8be3232d8a5e96c2808/1160/webp" alt="Турнир" class="w-full h-full object-cover">
+                <div class="absolute top-0 left-5 md:left-8 bg-gradient-to-b from-[#fff6a6] to-[#ffc700] text-black text-[8px] md:text-xs font-bold uppercase px-2 md:px-3 py-1 rounded-b-[5px]">
+                    tournament
+                </div>
+                <div class="absolute inset-0 flex items-center p-5 md:p-8">
+                    <div>
+                        <h3 class="text-white text-sm md:text-xl font-bold mb-3 drop-shadow-md">
+                            500 000 рублей<br>в новом турнире<br>от Playbro
+                        </h3>
+                        <button class="bg-primary hover:bg-primaryHover text-white font-bold text-[12px] md:text-sm uppercase rounded-button px-5 h-[30px] md:h-[40px] transition">
+                            Вперед
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Games Section: Новые -->
+        <section class="max-w-[1160px] mx-auto px-5 md:px-0 mb-6" id="new-games">
+            <div class="flex items-center justify-between mb-4 md:mb-6">
+                <div class="flex items-center gap-2">
+                    <img src="https://pixiocdn.net/imagination/v1/doc/0/95/65242bb5f84465fc1ef63a58/" alt="Новые" class="h-5 md:h-7">
+                    <h3 class="text-sm md:text-xl font-semibold uppercase">Новые</h3>
+                </div>
+                <a href="#" class="bg-primary text-white text-[12px] md:text-sm font-semibold rounded-button px-3 md:px-6 h-[30px] md:h-[40px] flex items-center shadow-sm hover:bg-primaryHover transition">
+                    ВСЕ
+                </a>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3" id="new-games-grid">
+            </div>
+        </section>
+
+        <!-- Promo Banner 2 - Poker -->
+        <section class="max-w-[1160px] mx-auto px-5 md:px-0 mb-6">
+            <div class="relative rounded-card overflow-hidden h-[145px] md:h-[208px]">
+                <img src="https://pixiocdn.net/imagination/v1/gfs/0/95/670d4b74fb4f48a7e15c6797/1160/webp" alt="Покер" class="w-full h-full object-cover">
+                <div class="absolute top-0 left-5 md:left-8 bg-gradient-to-b from-[#fff6a6] to-[#ffc700] text-black text-[8px] md:text-xs font-bold uppercase px-2 md:px-3 py-1 rounded-b-[5px]">
+                    poker
+                </div>
+                <div class="absolute inset-0 flex items-center p-5 md:p-8">
+                    <div>
+                        <h3 class="text-white text-sm md:text-xl font-bold mb-3 drop-shadow-md">
+                            ЛУЧШИЙ&nbsp;ПОКЕРНЫЙ РУМ <br>РОССИИ И&nbsp;КАЗАХСТАНА!
+                        </h3>
+                        <button class="bg-primary hover:bg-primaryHover text-white font-bold text-[12px] md:text-sm uppercase rounded-button px-5 h-[30px] md:h-[40px] transition">
+                            Играть в Покер
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Games Section: Популярное -->
+        <section class="max-w-[1160px] mx-auto px-5 md:px-0 mb-6" id="popular-games">
+            <div class="flex items-center justify-between mb-4 md:mb-6">
+                <div class="flex items-center gap-2">
+                    <img src="https://pixiocdn.net/imagination/v1/doc/0/95/67efd7848e2a10da2d7c54da/" alt="Популярное" class="h-5 md:h-7">
+                    <h3 class="text-sm md:text-xl font-semibold uppercase">Популярное</h3>
+                </div>
+                <a href="#" class="bg-primary text-white text-[12px] md:text-sm font-semibold rounded-button px-3 md:px-6 h-[30px] md:h-[40px] flex items-center shadow-sm hover:bg-primaryHover transition">
+                    ВСЕ
+                </a>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3" id="popular-games-grid">
+            </div>
+        </section>
+
+        <!-- Games Section: Слоты -->
+        <section class="max-w-[1160px] mx-auto px-5 md:px-0 mb-6" id="slots-games">
+            <div class="flex items-center justify-between mb-4 md:mb-6">
+                <div class="flex items-center gap-2">
+                    <img src="https://pixiocdn.net/imagination/v1/doc/0/95/65242c1df84465fc1ef63ab8/" alt="Слоты" class="h-5 md:h-7">
+                    <h3 class="text-sm md:text-xl font-semibold uppercase">Слоты</h3>
+                </div>
+                <a href="#" class="bg-primary text-white text-[12px] md:text-sm font-semibold rounded-button px-3 md:px-6 h-[30px] md:h-[40px] flex items-center shadow-sm hover:bg-primaryHover transition">
+                    ВСЕ
+                </a>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3" id="slots-games-grid">
+            </div>
+        </section>
+
+        <!-- SEO Text Section -->
+        <section class="bg-white relative">
+            <div class="max-w-[1160px] mx-auto px-5 md:px-0 pt-8 pb-16">
+                <h1 class="text-[#999] text-2xl md:text-[30px] font-normal leading-tight mb-4">
+                    Покердом (Pokerdom) — крупнейший покер-рум России с мгновенными выплатами
+                </h1>
+                <div class="text-[#999] text-sm leading-relaxed overflow-hidden max-h-[145px] transition-all duration-300" id="seo-content">
+                    <p class="mb-5"><strong>Покердом</strong> — флагманская платформа российского онлайн-покера, объединяющая десятки тысяч игроков ежедневно с 2014 года. <strong>Pokerdom</strong> специализируется на классических дисциплинах: техасский холдем, омаха, их турнирные вариации с гарантированными призовыми фондами до нескольких миллионов рублей.</p>
+                    <p>Репутация строится на трёх столпах: финансовая надёжность с выплатами за несколько часов, честность игрового процесса с сертифицированным ГСЧ и круглосуточная русскоязычная поддержка.</p>
+                </div>
+                <button onclick="toggleSeo()" class="text-primary text-sm border-b border-dashed border-primary mt-5 block" id="seo-toggle">Развернуть</button>
+            </div>
+        </section>
+
+        <!-- Breadcrumbs -->
+        <nav class="bg-mainBg h-[60px] flex items-center px-5 md:px-0 max-w-[1160px] mx-auto">
+            <a href="/" class="flex items-center">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            </a>
+        </nav>
+
+        <!-- Footer -->
+        <footer class="bg-black pt-6 pb-10 md:pt-10 md:pb-16">
+            <div class="max-w-[1160px] mx-auto px-5 md:px-0">
+                <!-- Footer Menu -->
+                <div class="flex flex-col md:flex-row gap-8 md:gap-12 mb-10">
+                    <div class="flex-1">
+                        <h4 class="text-white text-xs uppercase mb-4 font-normal">Покердом</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-[#999] text-xs hover:text-white transition">О нас</a></li>
+                            <li><a href="#" class="text-[#999] text-xs hover:text-white transition">Правила</a></li>
+                            <li><a href="#" class="text-[#999] text-xs hover:text-white transition">Политика конфиденциальности</a></li>
+                        </ul>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-white text-xs uppercase mb-4 font-normal">Безопасность</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-[#999] text-xs hover:text-white transition">Ответственная игра</a></li>
+                            <li><a href="#" class="text-[#999] text-xs hover:text-white transition">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-white text-xs uppercase mb-4 font-normal">Контакты</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-[#999] text-xs hover:text-white transition">Служба поддержки</a></li>
+                        </ul>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-white text-xs uppercase mb-4 font-normal">Подпишись на нас</h4>
+                        <div class="flex gap-3">
+                            <a href="https://t.me/PDRUB" target="_blank" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" opacity="0.6"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .173.325c.01.1.01.32-.01.44-.18 1.398-.842 4.792-1.192 6.358-.147.68-.44 1.006-.726 1.036-.622.054-1.094-.41-1.696-.8-.943-.618-1.477-.997-2.392-1.602-1.058-.696-.373-1.078.232-1.702.158-.165 2.914-2.668 2.966-2.734.005-.008.01-.035-.012-.05-.023-.016-.054-.01-.078.004-.336.24-2.642 1.74-3.756 2.478-.19.125-.38.236-.577.236-.2 0-.558-.114-.84-.21-.34-.114-.61-.174-.61-.354 0-.148.136-.298.392-.446 1.498-.98 3.63-2.24 3.966-2.468.052-.036.082-.054.124-.054z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="mb-8">
+                    <h4 class="text-[#999] text-xs uppercase mb-4">Платежные методы</h4>
+                    <div class="flex gap-2 overflow-x-auto games-scroll pb-2">
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-xs font-bold">VISA</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-xs font-bold">MC</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-xs font-bold">МИР</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-xs font-bold">СБП</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-xs font-bold">Crypto</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-xs font-bold">SkyPay</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Providers -->
+                <div class="mb-8">
+                    <h4 class="text-[#999] text-xs uppercase mb-4">Провайдеры</h4>
+                    <div class="flex gap-2 overflow-x-auto games-scroll pb-2">
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-[10px] font-semibold">Pragmatic</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-[10px] font-semibold">Spinomenal</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-[10px] font-semibold">Playson</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-[10px] font-semibold">Bgaming</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-[10px] font-semibold">Endorphina</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-[10px] font-semibold">NoLimit</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-[10px] font-semibold">Evolution</span>
+                        </div>
+                        <div class="w-[88px] h-[60px] md:w-[127px] md:h-[90px] bg-white/10 rounded flex items-center justify-center flex-shrink-0 hover:bg-white/20 transition cursor-pointer">
+                            <span class="text-white text-[10px] font-semibold">Yggdrasil</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Extra Info -->
+                <div class="flex flex-wrap items-center gap-5 mb-6">
+                    <div class="w-[40px] h-[40px] bg-white/10 rounded flex items-center justify-center">
+                        <span class="text-white text-lg font-bold">18+</span>
+                    </div>
+                    <a href="https://access.gaminglabs.com/certificate/index?i=308" class="w-[86px] h-[30px] bg-white/10 rounded flex items-center justify-center">
+                        <img src="https://dsk7pokerdom.com/play/fs/files/glc.svg" alt="GamingLabs" class="max-w-full max-h-full opacity-70 hover:opacity-100 transition">
+                    </a>
+                </div>
+                <p class="text-[#999] text-[10px] leading-relaxed">
+                    Покердом придерживается принципов ответственной игры, для детальной информации посети <a href="https://www.gamblingtherapy.org/ru/" class="text-primary hover:underline">Gamblingtherapy.org</a>
+                </p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Mobile Bottom Toolbar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-black z-[101] md:hidden">
+        <div class="flex items-center justify-between h-[75px] px-5">
+            <button class="flex flex-col items-center gap-1 text-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                <span class="text-[10px]">Казино</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 text-white/50">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                <span class="text-[10px]">Спорт</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 text-primary bg-primary/20 -mt-5 w-[46px] h-[46px] rounded-full shadow-lg shadow-primary/30">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <button class="flex flex-col items-center gap-1 text-white/50">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span class="text-[10px]">Акции</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 text-white/50">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                <span class="text-[10px]">Меню</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Game data
+        const gamesData = {
+            top: [
+                { title: "Jelly Express", provider: "Pragmatic Play", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69dcc07445bc2bf8c40c784c/220/webp" },
+                { title: "Coin Strike Hold and Win", provider: "Playson", img: "https://pixiocdn.net/imagination/v1/doc/0/95/6441323e4802bf5dbde058a4/220/webp" },
+                { title: "Crazy Red", provider: "Amusnet", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69c143a0181fb27872e5f0d0/220/webp" },
+                { title: "Hit Slot 2026", provider: "Endorphina", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69a6f0ff99d023616b543527/220/webp" },
+                { title: "3 Hot Chillies", provider: "3 Oaks", img: "https://pixiocdn.net/imagination/v1/doc/0/95/68a5d8d33093d98d44eac92d/220/webp" },
+                { title: "Hot Ross", provider: "Hacksaw Gaming", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69ca7d641e8f906cc49066b4/220/webp" },
+                { title: "Sweet Alchemy 100", provider: "Play'n GO", img: "https://pixiocdn.net/imagination/v1/doc/0/95/687101d5616c079c13dd808f/220/webp" },
+                { title: "3 Irish Treasures", provider: "Spinomenal", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69a57caa6794c0560d745b32/220/webp" },
+                { title: "Book of Waka Waka", provider: "Amusnet", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69c1439df831670f748e3597/220/webp" },
+                { title: "Zeus vs Hades - Gods of War", provider: "Pragmatic Play", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69dce7b6d485e9707a843856/220/webp" },
+            ],
+            new: [
+                { title: "Pokerdom Invaders", provider: "Amigo Gaming", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69dcabda45bc2bf8c40c7475/220/webp" },
+                { title: "3 Fortune Mummies", provider: "Spinomenal", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69dcad15788b5346562f7761/220/webp" },
+                { title: "Deep Sea Wilds", provider: "Galaxsys", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69dcafafa4e4987af12b99d4/220/webp" },
+                { title: "Rhino Coins - Hit the Bonus", provider: "Playson", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69d8b502887df8b6a4416932/220/webp" },
+                { title: "Phoenix Luck Hotfire", provider: "Novomatic", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69d8b6470a0614ea3660a2a4/220/webp" },
+                { title: "Lady Wish", provider: "Penguin King", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69d8b6853eac1fbab7e7613f/220/webp" },
+                { title: "Thunder Tiger", provider: "3 Oaks", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69d77179e6f8b350e5f29b99/220/webp" },
+                { title: "Zombie Circus", provider: "Eurasian Gaming", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69d8b5d9e6398ba737c6d428/220/webp" },
+                { title: "Locked Hearts 5", provider: "Fazi", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69d8b6180a0614ea3660a297/220/webp" },
+                { title: "Munchy Milo", provider: "Hacksaw Gaming", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69d77aa869197a50281a410a/220/webp" },
+            ],
+            popular: [
+                { title: "The Dog House", provider: "Pragmatic Play", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69dce73bbe6195e48f15ba63/220/webp" },
+                { title: "Coin Strike Hold and Win", provider: "Playson", img: "https://pixiocdn.net/imagination/v1/doc/0/95/6441323e4802bf5dbde058a4/220/webp" },
+                { title: "Zeus vs Hades - Gods of War", provider: "Pragmatic Play", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69dce7b6d485e9707a843856/220/webp" },
+                { title: "Sweet Rush Bonanza", provider: "Pragmatic Play", img: "https://pixiocdn.net/imagination/v1/doc/0/95/68dfcc49319a76bb3797e925/220/webp" },
+                { title: "Suck", provider: "Shadylady", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69c119d39874a5b05d7c5d3e/220/webp" },
+                { title: "The Dawn is Coming!", provider: "Mascot Gaming", img: "https://pixiocdn.net/imagination/v1/doc/0/95/6915be649ede0ec7f492006a/220/webp" },
+                { title: "Crazy Red", provider: "Amusnet", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69c143a0181fb27872e5f0d0/220/webp" },
+                { title: "Crazy Monkey", provider: "Igrosoft", img: "https://pixiocdn.net/imagination/v1/doc/0/95/67f7fde9eb6c761742fe9f83/220/webp" },
+                { title: "Break the Piggy Bank", provider: "Penguin King", img: "https://pixiocdn.net/imagination/v1/doc/0/95/693971557a558607b09c4d26/220/webp" },
+                { title: "Fortune Five Double", provider: "GameBeat", img: "https://pixiocdn.net/imagination/v1/doc/0/95/63356e9e3ffd91bd7d42b6fc/220/webp" },
+            ],
+            slots: [
+                { title: "Siberian Express", provider: "Pixmove", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69972510c6262549b01d4b7a/220/webp" },
+                { title: "Hot Ross", provider: "Hacksaw Gaming", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69ca7d641e8f906cc49066b4/220/webp" },
+                { title: "Mega Thunder RUNNING WINS", provider: "Fugaso", img: "https://pixiocdn.net/imagination/v1/doc/0/95/699ec39a7020b374c1ce8f96/220/webp" },
+                { title: "Gangsta Piggy Hold and Win", provider: "Galaxsys", img: "https://pixiocdn.net/imagination/v1/doc/0/95/699c318b6071111f690e584a/220/webp" },
+                { title: "12 Fortune Signs", provider: "Amigo Gaming", img: "https://pixiocdn.net/imagination/v1/doc/0/95/69a033e9b02be506d5b7e351/220/webp" },
+                { title: "Raptor 2", provider: "Yggdrasil", img: "https://pixiocdn.net/imagination/v1/doc/0/95/6968b292439a4c13c86fa6c8/220/webp" },
+                { title: "Coins of Dragon - Hold & Win", provider: "BetSoft", img: "https://pixiocdn.net/imagination/v1/doc/0/95/6968c72837f75d8ca11761c8/220/webp" },
+                { title: "Cleopatra Jewel Box", provider: "Playbro", img: "https://pixiocdn.net/imagination/v1/doc/0/95/694926fd270dafec121b4957/220/webp" },
+                { title: "Train of Gold Hold & Win", provider: "Onlyplay", img: "https://pixiocdn.net/imagination/v1/doc/0/95/690c6fd5c716f6ba3cfe93e6/220/webp" },
+                { title: "Mighty Wild - Gorilla", provider: "VoltEnt", img: "https://pixiocdn.net/imagination/v1/doc/0/95/690ca2dca94b528b03d65523/220/webp" },
+            ]
+        };
+
+        function createGameCard(game) {
+            return `
+                <div class="game-card group relative overflow-hidden rounded-card shadow-sm bg-[#eee] cursor-pointer h-[170px] md:h-[208px]">
+                    <img src="${game.img}" alt="${game.title}" class="w-full h-[95px] md:h-[114px] object-cover pointer-events-none select-none" draggable="false">
+                    <div class="game-overlay absolute bottom-0 left-0 right-0 bg-white rounded-b-card px-2.5 py-2 md:px-3 md:py-3 max-h-[75px] md:max-h-[94px] transition-all duration-300 overflow-hidden">
+                        <div class="flex items-center gap-1 mb-0.5">
+                            <span class="text-[12px] md:text-[14px] text-gray-500">${game.provider}</span>
+                        </div>
+                        <p class="game-title text-[14px] md:text-base font-semibold text-black whitespace-nowrap overflow-hidden text-ellipsis mb-2 transition-all">${game.title}</p>
+                        <div class="flex items-center gap-4">
+                            <a href="#" class="bg-primary hover:bg-primaryHover text-white font-bold text-[12px] uppercase rounded-button px-4 h-[30px] flex items-center transition">Играть</a>
+                            <a href="#" class="text-primary text-[12px] uppercase hover:underline">Демо</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGames() {
+            Object.keys(gamesData).forEach(section => {
+                const grid = document.getElementById(`${section}-games-grid`);
+                if (grid) {
+                    grid.innerHTML = gamesData[section].map(game => createGameCard(game)).join('');
+                }
+            });
+        }
+
+        // SEO toggle
+        let seoExpanded = false;
+        function toggleSeo() {
+            const content = document.getElementById('seo-content');
+            const toggle = document.getElementById('seo-toggle');
+            seoExpanded = !seoExpanded;
+            if (seoExpanded) {
+                content.style.maxHeight = '2000px';
+                toggle.textContent = 'Свернуть';
+            } else {
+                content.style.maxHeight = '145px';
+                toggle.textContent = 'Развернуть';
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu(menuId) {
+            const menu = document.getElementById(menuId);
+            const arrow = menu.querySelector('.menu__arrow');
+            const items = menu.querySelector('.menu__items');
+            if (items.style.display === 'block') {
+                items.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                items.style.display = 'block';
+                arrow.style.transform = 'rotate(90deg)';
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGames();
+        });
+    </script>
+</body>
+</html>
